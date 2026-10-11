@@ -1,0 +1,403 @@
+.phase-navigation {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 18px;
+}
+
+.phase-tab {
+  border: 1px solid #ffffff45;
+  background: #ffffff12;
+  color: white;
+}
+
+.phase-tab.active {
+  border-color: white;
+  background: white;
+  color: #173b60;
+}
+
+.rec-phase-view[hidden],
+.comparison-phase-view[hidden],
+.rec-gu-empty[hidden],
+.selected-gu-summary[hidden],
+#recGuPicker[hidden] {
+  display: none !important;
+}
+
+.rec-open-case {
+  display: flex;
+  align-items: end;
+  gap: 10px;
+  margin: 18px 0;
+}
+
+.rec-open-case .field {
+  flex: 1;
+  min-width: 0;
+}
+
+.rec-open-case select {
+  width: 100%;
+  min-height: 42px;
+  padding: 9px 12px;
+  border: 1px solid #cbd5e1;
+  border-radius: 6px;
+  background: #fbfcfe;
+  color: #263445;
+}
+
+.rec-open-case button {
+  flex: 0 0 auto;
+}
+
+.rec-panel > h2 {
+  margin-bottom: 10px;
+}
+
+.rec-reference-field {
+  max-width: 560px;
+  margin: 22px 0;
+}
+
+.rec-reference-field label,
+.rec-gu-picker > label {
+  display: block;
+  margin-bottom: 8px;
+  font-weight: 700;
+}
+
+.rec-reference-field input,
+#recGuSearch {
+  background: #fbfcfe;
+}
+
+.rec-gu-picker {
+  padding: 18px;
+  border: 1px solid #dce3eb;
+  border-radius: 8px;
+  background: #f7f9fc;
+}
+
+.rec-gu-picker-toggle {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  cursor: pointer;
+  font-weight: 700;
+  list-style-position: inside;
+}
+
+.rec-picker-help {
+  margin: 12px 0;
+  color: #758397;
+  font-size: 13px;
+}
+
+.rec-picker-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 16px;
+}
+
+.rec-picker-heading h3,
+.selected-gu-summary h3 {
+  margin: 0;
+  color: #1e344b;
+  font-size: 17px;
+}
+
+.rec-picker-heading p {
+  margin: 5px 0 0;
+  color: #758397;
+  font-size: 13px;
+}
+
+.rec-gu-cards {
+  display: grid;
+  gap: 10px;
+  max-height: 400px;
+  margin-top: 12px;
+  overflow-y: auto;
+}
+
+.rec-gu-card {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 14px 16px;
+  border: 1px solid #e0e6ed;
+  border-radius: 8px;
+  background: white;
+}
+
+.rec-gu-card.selected {
+  border-color: #3274b8;
+  box-shadow: 0 0 0 2px #3274b81c;
+}
+
+.rec-gu-details {
+  min-width: 0;
+}
+
+.rec-gu-details h4 {
+  margin: 0;
+  color: #20364c;
+  font-size: 15px;
+}
+
+.rec-gu-reference {
+  margin: 5px 0 0;
+  color: #51677c;
+  unicode-bidi: isolate;
+}
+
+.rec-gu-reference[dir="ltr"] {
+  text-align: right;
+}
+
+.rec-gu-metadata,
+.rec-gu-disambiguator {
+  margin: 5px 0 0;
+  color: #7b8998;
+  font-size: 12px;
+}
+
+.rec-gu-select {
+  flex: 0 0 auto;
+  background: #e8f0f6;
+  color: #234866;
+}
+
+.rec-gu-empty {
+  margin: 14px 0 0;
+  padding: 24px 16px;
+  border: 1px dashed #d2dce6;
+  border-radius: 8px;
+  background: white;
+  color: #69798b;
+  text-align: center;
+}
+
+.selected-gu-summary {
+  margin-top: 18px;
+  padding: 16px 18px;
+  border-inline-start: 4px solid #3274b8;
+  border-radius: 6px;
+  background: #f3f7fa;
+}
+
+.selected-gu-summary p {
+  margin: 8px 0 0;
+  color: #51677c;
+}
+
+.rec-calculation-summary dl {
+  margin: 0;
+}
+
+.rec-calculation-summary dl > div {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 12px 0;
+  border-bottom: 1px solid #edf0f4;
+}
+
+.rec-calculation-summary dt {
+  color: #51677c;
+}
+
+.rec-calculation-summary dd {
+  margin: 0;
+  font-weight: 700;
+  text-align: left;
+  unicode-bidi: isolate;
+}
+
+.rec-calculation-summary .rec-balance-row {
+  color: #17613a;
+  font-size: 17px;
+}
+
+.rec-calculation-summary .rec-balance-row dd {
+  font-size: 21px;
+}
+
+.rec-balance-notice {
+  margin: 14px 0 0;
+  color: #526173;
+  font-weight: 600;
+}
+
+.rec-balance-notice[data-state="warning"] {
+  color: #9a5b00;
+}
+
+.comparison-actions {
+  display: grid;
+  grid-template-columns: auto minmax(220px, 1fr) auto;
+  align-items: end;
+  gap: 10px;
+  margin: 18px 0;
+}
+
+.comparison-actions .field,
+.comparison-name-field,
+.comparison-source-field {
+  min-width: 0;
+}
+
+.comparison-actions select,
+.comparison-source-field select {
+  width: 100%;
+  min-height: 42px;
+  padding: 9px 12px;
+  border: 1px solid #cbd5e1;
+  border-radius: 6px;
+  background: #fbfcfe;
+  color: #263445;
+}
+
+.comparison-name-field,
+.comparison-source-field {
+  margin: 16px 0;
+}
+
+.comparison-source-snapshot,
+.comparison-invoice-panel,
+.comparison-result {
+  margin-top: 18px;
+  padding: 18px;
+  border: 1px solid #dce3eb;
+  border-radius: 8px;
+  background: #f8fafc;
+}
+
+.comparison-source-snapshot h3,
+.comparison-invoice-heading h3,
+.comparison-result h3 {
+  margin: 0 0 12px;
+  color: #1e344b;
+}
+
+.comparison-source-snapshot dl,
+.comparison-result dl {
+  margin: 0;
+}
+
+.comparison-source-snapshot dl > div,
+.comparison-result dl > div {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 8px 0;
+  border-bottom: 1px solid #e6ebf1;
+}
+
+.comparison-source-snapshot dd,
+.comparison-result dd {
+  margin: 0;
+  font-weight: 700;
+  unicode-bidi: isolate;
+}
+
+.comparison-source-snapshot > p,
+.comparison-invoice-heading p {
+  margin: 12px 0 0;
+  color: #758397;
+  font-size: 13px;
+}
+
+.comparison-invoice-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 14px;
+}
+
+.comparison-invoice-heading h3 {
+  margin-bottom: 0;
+}
+
+.comparison-invoice-heading p {
+  margin-top: 5px;
+}
+
+.comparison-invoice-rows {
+  display: grid;
+  gap: 10px;
+}
+
+.comparison-invoice-row {
+  display: grid;
+  grid-template-columns: minmax(130px, 0.8fr) minmax(160px, 1.5fr) minmax(130px, 0.8fr) auto;
+  align-items: center;
+  gap: 8px;
+}
+
+.comparison-invoice-row select {
+  min-width: 0;
+  min-height: 42px;
+  padding: 9px;
+  border: 1px solid #cbd5e1;
+  border-radius: 6px;
+  background: white;
+}
+
+.comparison-result #comparisonResultStatus {
+  margin: 14px 0 0;
+  font-weight: 700;
+}
+
+#comparisonResultStatus[data-state="identical"] {
+  color: #17613a;
+}
+
+#comparisonResultStatus[data-state="review"] {
+  color: #9a5b00;
+}
+
+#comparisonResultStatus[data-state="empty"] {
+  color: #64748b;
+}
+
+.comparison-result .muted {
+  margin: 8px 0 0;
+}
+
+@media (max-width: 600px) {
+  .rec-open-case {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .comparison-actions,
+  .comparison-invoice-row {
+    grid-template-columns: 1fr;
+  }
+
+  .comparison-invoice-heading {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .rec-gu-card {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .rec-gu-select {
+    width: 100%;
+  }
+
+  .rec-calculation-summary dl > div {
+    flex-direction: column;
+    gap: 5px;
+  }
+}

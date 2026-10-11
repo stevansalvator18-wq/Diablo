@@ -1,0 +1,20 @@
+{
+  "name": "monpremierelectron",
+  "version": "1.0.0",
+  "description": "Mon premier programme",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron .",
+    "server": "node server/index.js",
+    "test": "node --test"
+  },
+  "devDependencies": {
+    "electron": "^44.7.0"
+  },
+  "dependencies": {
+    "exceljs": "^4.4.0"
+  },
+  "overrides": {
+    "uuid": "11.1.1"
+  }
+}

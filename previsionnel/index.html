@@ -1,0 +1,451 @@
+
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>التكلفة التقديرية | رسوم التجزئات العقارية</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="../rec/rec.css">
+</head>
+<body>
+  <section id="connectionView" class="connection-view" aria-labelledby="connectionTitle">
+    <div class="connection-card">
+      <h1 id="connectionTitle">Connexion au serveur central</h1>
+      <p>Les dossiers sont conservés sur le serveur du réseau local.</p>
+      <form id="serverConnectionForm">
+        <label for="serverAddress">Adresse du serveur</label>
+        <input id="serverAddress" type="url" value="http://127.0.0.1:8765"
+               placeholder="http://192.168.1.10:8765" required>
+        <button id="saveServerAddress" class="add-btn" type="submit">
+          Vérifier et enregistrer l’adresse
+        </button>
+        <button id="retryServerConnection" class="add-btn" type="button" hidden>
+          Réessayer la connexion
+        </button>
+      </form>
+      <form id="serverLoginForm">
+        <h2>Connexion</h2>
+        <label for="loginUsername">Nom d’utilisateur</label>
+        <input id="loginUsername" type="text" maxlength="50" autocomplete="username" required>
+        <label for="loginPassword">Mot de passe</label>
+        <input id="loginPassword" type="password" maxlength="256"
+               autocomplete="current-password" required>
+        <button id="loginButton" class="save-btn" type="submit">Se connecter</button>
+      </form>
+      <details>
+        <summary>Première configuration du serveur</summary>
+        <form id="serverBootstrapForm">
+          <label for="bootstrapCode">Code à usage unique affiché sur le serveur</label>
+          <input id="bootstrapCode" type="password" autocomplete="off" required>
+          <label for="bootstrapUsername">Nom du compte administrateur</label>
+          <input id="bootstrapUsername" type="text" maxlength="50" required>
+          <label for="bootstrapPassword">Mot de passe (12 caractères minimum)</label>
+          <input id="bootstrapPassword" type="password" minlength="12" maxlength="256" required>
+          <button id="bootstrapButton" class="save-btn" type="submit">
+            Créer le premier administrateur
+          </button>
+        </form>
+      </details>
+      <p id="connectionStatus" role="status" aria-live="polite"></p>
+    </div>
+  </section>
+
+  <div id="applicationRoot" hidden>
+  <header class="app-header">
+    <h1>تدبير رسوم التجزئات العقارية</h1>
+    <p id="phaseSubtitle">التكلفة التقديرية</p>
+    <div class="account-toolbar">
+      <span id="currentUserLabel"></span>
+      <button id="exportPdfButton" class="add-btn" type="button">تصدير PDF</button>
+      <button id="exportExcelButton" class="add-btn" type="button">تصدير Excel</button>
+      <button id="printReportButton" class="add-btn" type="button">طباعة</button>
+      <button id="logoutButton" class="delete-btn" type="button">تسجيل الخروج</button>
+      <span id="reportStatus" role="status" aria-live="polite"></span>
+    </div>
+    <nav class="phase-navigation" aria-label="مراحل تدبير الرسوم">
+      <button id="guPhaseButton" class="phase-tab active" type="button" aria-pressed="true">
+        التكلفة التقديرية
+      </button>
+      <button id="recPhaseButton" class="phase-tab" type="button" aria-pressed="false">
+        التكلفة الحقيقية
+      </button>
+      <button id="comparisonPhaseButton" class="phase-tab" type="button" aria-pressed="false">
+        المقارنة
+      </button>
+      <button id="settingsPhaseButton" class="phase-tab" type="button" aria-pressed="false">
+        الإعدادات
+      </button>
+      <button id="adminPhaseButton" class="phase-tab" type="button" aria-pressed="false" hidden>
+        إدارة الخادم
+      </button>
+    </nav>
+  </header>
+
+  <main class="container">
+    <section class="panel" data-phase="gu">
+      <h2>معلومات المشروع</h2>
+
+      <div class="form-grid">
+        <div class="field">
+          <label for="companyName">اسم المشروع (اختياري)</label>
+          <input id="companyName" type="text"
+                 dir="auto" placeholder="اسم المشروع أو صاحب المشروع">
+        </div>
+
+        <div class="field">
+          <label for="guReference">مرجع ملف التكلفة التقديرية (اختياري)</label>
+          <input id="guReference" type="text"
+                 dir="ltr" placeholder="GU-53992/2025">
+        </div>
+      </div>
+
+      <div class="case-actions">
+        <button id="newGuCase" class="add-btn" type="button">ملف جديد</button>
+        <button id="saveGuCase" class="save-btn" type="button">حفظ الملف</button>
+        <p id="caseStatus" class="case-status" dir="auto" role="status" aria-live="polite"></p>
+      </div>
+
+      <div class="case-search">
+        <label for="guSearchQuery">البحث عن ملف التكلفة التقديرية حسب المرجع أو اسم المشروع</label>
+        <div class="case-search-controls">
+          <input id="guSearchQuery" type="text" maxlength="100"
+                 dir="auto" placeholder="أدخل جزءاً من المرجع أو اسم المشروع">
+          <button id="searchGuCases" class="add-btn" type="button">بحث</button>
+          <button id="showAllGuCases" class="add-btn" type="button">عرض جميع الملفات</button>
+        </div>
+        <section id="guSearchResults" class="gu-results-panel" hidden
+                 aria-labelledby="guResultsTitle">
+          <header class="gu-results-header">
+            <div>
+              <h3 id="guResultsTitle">قائمة ملفات التكلفة التقديرية</h3>
+              <p>مرجع الملف واسم المشروع</p>
+            </div>
+            <span id="guResultsCount" class="gu-results-count">0 ملف</span>
+          </header>
+          <div id="guCaseCards" class="gu-case-cards"></div>
+          <p id="guResultsEmpty" class="gu-results-empty" hidden></p>
+        </section>
+        <p id="guSearchStatus" class="case-status" dir="auto" role="status" aria-live="polite"></p>
+      </div>
+    </section>
+
+    <dialog id="unsavedChangesDialog" aria-labelledby="unsavedChangesTitle">
+      <h2 id="unsavedChangesTitle">تعديلات غير محفوظة</h2>
+      <p>ما الإجراء الذي ترغب في اتخاذه قبل المتابعة؟</p>
+      <form method="dialog" class="unsaved-actions">
+        <button data-button-pref-key="gu.unsaved.save" class="save-btn" type="submit" value="save">حفظ التعديلات</button>
+        <button data-button-pref-key="gu.unsaved.discard" class="add-btn" type="submit" value="discard">تجاهل التعديلات</button>
+        <button data-button-pref-key="gu.unsaved.cancel" class="delete-btn" type="submit" value="cancel">إلغاء العملية</button>
+      </form>
+    </dialog>
+
+    <dialog id="deleteGuCaseDialog" aria-labelledby="deleteGuCaseTitle">
+      <h2 id="deleteGuCaseTitle">تأكيد الحذف</h2>
+      <p id="deleteGuCaseMessage"></p>
+      <form method="dialog" class="unsaved-actions">
+        <button data-button-pref-key="gu.delete.confirm" class="delete-btn" type="submit" value="delete">حذف هذا الملف</button>
+        <button data-button-pref-key="gu.delete.cancel" class="add-btn" type="submit" value="cancel">إلغاء</button>
+      </form>
+    </dialog>
+
+    <dialog id="duplicateEmptyGuCaseDialog" aria-labelledby="duplicateEmptyGuCaseTitle">
+      <h2 id="duplicateEmptyGuCaseTitle">يوجد بالفعل ملف دون مرجع أو اسم</h2>
+      <p>يوجد ملف محفوظ دون مرجع ودون اسم للمشروع. يمكنك تحميله أو إلغاء الحفظ وإدخال إحدى المعلومتين.</p>
+      <form method="dialog" class="unsaved-actions">
+        <button data-button-pref-key="gu.duplicate.load" class="save-btn" type="submit" value="load">تحميل الملف الموجود</button>
+        <button data-button-pref-key="gu.duplicate.cancel" class="add-btn" type="submit" value="cancel">إلغاء الحفظ</button>
+      </form>
+    </dialog>
+
+    <section class="panel" data-phase="gu">
+      <h2>الفواتير التقديرية حسب نوع الأشغال</h2>
+      <p class="muted">يمكن إضافة عدة فواتير لكل فئة من الأشغال.</p>
+      <div id="workGrid" class="work-grid"></div>
+    </section>
+
+    <section class="panel" data-phase="gu">
+      <h2>إعدادات الاحتساب</h2>
+
+      <div class="form-grid">
+        <div class="field">
+          <label for="taxRate">نسبة الرسم (%)</label>
+          <input id="taxRate" type="number"
+               dir="ltr" min="0" step="0.01" value="5">
+        </div>
+
+        <div class="field">
+          <label for="advanceRate">نسبة التسبيق (%)</label>
+          <input id="advanceRate" type="number"
+               dir="ltr" min="0" step="0.01" value="75">
+        </div>
+      </div>
+    </section>
+
+    <section class="panel" data-phase="gu">
+      <h2>ملخص التكلفة التقديرية</h2>
+
+      <div class="result-row">
+        <span>التكلفة التقديرية الإجمالية للأشغال</span>
+        <strong id="resultTotal" dir="ltr">0,00 د.م.</strong>
+      </div>
+
+      <div class="result-row">
+        <span>النسبة المطبقة</span>
+        <strong id="resultTaxRate" dir="ltr">5 %</strong>
+      </div>
+
+      <div class="result-row">
+        <span>مبلغ الرسم</span>
+        <strong id="resultTax" dir="ltr">0,00 د.م.</strong>
+      </div>
+
+      <div class="result-row">
+        <span>نسبة التسبيق</span>
+        <strong id="resultAdvanceRate" dir="ltr">75 %</strong>
+      </div>
+
+      <div class="result-row final-row">
+        <span>مبلغ التسبيق النظري</span>
+        <strong id="resultAdvance" dir="ltr">0,00 د.م.</strong>
+      </div>
+    </section>
+
+    <section id="recPhaseView" class="rec-phase-view" data-phase="rec" hidden>
+      <section class="panel rec-panel">
+        <h2>التكلفة الحقيقية</h2>
+        <p class="muted">جهّز ملف REC وفواتيره أولاً، ثم استشر ملف GU واربطه صراحة عند الحاجة.</p>
+
+        <div class="case-actions rec-primary-actions">
+          <button id="createRecCase" class="save-btn" type="button">
+            حفظ ملف التكلفة الحقيقية
+          </button>
+          <button id="newRecCase" class="add-btn" type="button">ملف تكلفة حقيقية جديد</button>
+          <p id="recStatus" class="case-status" dir="auto" role="status" aria-live="polite"></p>
+        </div>
+
+        <section class="summary-grid" aria-label="القيم التقديرية لملف GU المعروض">
+          <article class="summary-card">
+            <span>التكلفة التقديرية الإجمالية</span>
+            <strong id="recTopEstimatedCost" dir="ltr">0,00 د.م.</strong>
+          </article>
+          <article class="summary-card">
+            <span>مبلغ الرسم</span>
+            <strong id="recTopEstimatedTax" dir="ltr">0,00 د.م.</strong>
+          </article>
+          <article class="summary-card">
+            <span>مبلغ التسبيق النظري</span>
+            <strong id="recTopTheoreticalAdvance" dir="ltr">0,00 د.م.</strong>
+          </article>
+        </section>
+
+        <div class="rec-open-case">
+          <div class="field">
+            <label for="recSavedSelect">فتح ملف تكلفة حقيقية محفوظ</label>
+            <select id="recSavedSelect">
+              <option value="">اختر ملفاً محفوظاً</option>
+            </select>
+          </div>
+          <button id="openSavedRecCase" class="add-btn" type="button" disabled>
+            فتح الملف
+          </button>
+        </div>
+
+        <div class="form-grid rec-case-fields">
+          <div class="field">
+            <label for="recReference">مرجع ملف التكلفة الحقيقية</label>
+            <input id="recReference" type="text" dir="ltr" maxlength="100"
+                   placeholder="123456/2026" autocomplete="off">
+          </div>
+          <div class="field">
+            <label for="recLotName">اسم التجزئة</label>
+            <input id="recLotName" type="text" dir="auto" maxlength="200"
+                   placeholder="أدخل اسم التجزئة">
+          </div>
+        </div>
+
+        <details id="recGuPicker" class="rec-gu-picker">
+          <summary class="rec-gu-picker-toggle">
+            <span>اختيار ملف التكلفة التقديرية</span>
+            <span id="recGuCount" class="gu-results-count">0 ملف</span>
+          </summary>
+          <p class="rec-picker-help">تُعرض الملفات غير المرتبطة بملف تكلفة حقيقية.</p>
+
+          <label for="recGuSearch">البحث حسب المرجع أو اسم المشروع</label>
+          <input id="recGuSearch" type="search" dir="auto"
+                 placeholder="أدخل جزءاً من المرجع أو اسم المشروع">
+          <div id="recGuCards" class="rec-gu-cards"></div>
+          <p id="recGuEmpty" class="gu-results-empty" hidden></p>
+        </details>
+
+        <section id="selectedGuSummary" class="selected-gu-summary" hidden
+                 aria-live="polite">
+          <h3>ملف GU المحدد للمعاينة</h3>
+          <p id="selectedGuName"></p>
+          <p id="selectedGuReference" dir="auto"></p>
+          <p id="recGuLinkStatus">لا توجد علاقة محفوظة بملف GU.</p>
+          <button id="linkRecToSelectedGu" class="save-btn" type="button">
+            ربط ملف GU المحدد بملف REC
+          </button>
+        </section>
+
+        <section class="panel rec-invoice-panel">
+          <h3>فواتير التكلفة الحقيقية حسب نوع الأشغال</h3>
+          <p class="muted">تُحفظ فواتير التكلفة الحقيقية مستقلة عن فواتير الملف التقديري.</p>
+          <div id="recWorkGrid" class="work-grid rec-work-grid"></div>
+        </section>
+
+      </section>
+
+      <section id="recCalculationSummary" class="panel rec-calculation-summary">
+        <h2>ملخص التكلفة والتسبيق والرصيد النهائي</h2>
+        <dl>
+          <div><dt>التكلفة التقديرية لملف GU المعروض</dt><dd id="recEstimatedCost" dir="ltr"></dd></div>
+          <div><dt>الرسم التقديري (5٪)</dt><dd id="recEstimatedTax" dir="ltr"></dd></div>
+          <div><dt>التسبيق النظري المحتسب (75٪)</dt><dd id="recTheoreticalAdvance" dir="ltr"></dd></div>
+          <div><dt>إجمالي التكلفة الحقيقية</dt><dd id="recActualCost" dir="ltr"></dd></div>
+          <div><dt>مبلغ الرسم النهائي (5٪)</dt><dd id="recActualTax" dir="ltr"></dd></div>
+          <div class="rec-balance-row"><dt>المجموع الواجب أداؤه النهائي</dt><dd id="recFinalBalance" dir="ltr"></dd></div>
+        </dl>
+        <p id="recBalanceNotice" class="rec-balance-notice" hidden></p>
+      </section>
+    </section>
+
+    <section id="comparisonPhaseView" class="comparison-phase-view" data-phase="comparison"
+             lang="ar" dir="rtl" hidden>
+      <section class="panel comparison-panel">
+        <h2>مقارنة الفواتير</h2>
+        <p class="muted">تُنسخ بيانات ملف التكلفة الحقيقية المحدد إلى مقارنة مستقلة، ولا يؤدي الاطلاع عليها إلى تعديل الملف الأصلي.</p>
+
+        <div class="comparison-actions">
+          <button id="newComparison" class="add-btn" type="button">مقارنة جديدة</button>
+          <div class="field">
+            <label for="savedComparisonSelect">المقارنات المحفوظة</label>
+            <select id="savedComparisonSelect">
+              <option value="">اختر مقارنة محفوظة</option>
+            </select>
+          </div>
+          <button id="openComparison" class="add-btn" type="button" disabled>فتح المقارنة</button>
+        </div>
+
+        <div class="field comparison-name-field">
+          <label for="comparisonName">اسم المقارنة</label>
+          <input id="comparisonName" type="text" maxlength="200" dir="auto"
+                 placeholder="المقارنة_اسم_الملف">
+        </div>
+
+        <div class="field comparison-source-field">
+          <label for="comparisonSourceRec">اختيار ملف التكلفة الحقيقية</label>
+          <select id="comparisonSourceRec">
+            <option value="">اختر ملف تكلفة حقيقية محفوظاً</option>
+          </select>
+        </div>
+
+        <section id="comparisonSourceSnapshot" class="comparison-source-snapshot" hidden
+                 aria-live="polite">
+          <h3>نسخة مستقلة من بيانات الملف المرجعي</h3>
+          <dl>
+            <div><dt>رقم الملف</dt><dd id="comparisonSourceReference"></dd></div>
+            <div><dt>اسم التجزئة</dt><dd id="comparisonSourceLot"></dd></div>
+            <div><dt>ملف التكلفة التقديرية المرتبط وقت النسخ</dt><dd id="comparisonSourceGu"></dd></div>
+            <div><dt>المبلغ المرجعي حسب المهندس (مجموع فواتير REC)</dt><dd id="comparisonReferenceTotal" dir="ltr"></dd></div>
+            <div><dt>عدد فواتير REC المنسوخة</dt><dd id="comparisonSourceInvoiceCount"></dd></div>
+          </dl>
+          <p>المبلغ المرجعي هو مجموع الفواتير الفعلية المسجلة في ملف REC المحدد. لا تؤثر التعديلات اللاحقة على ملف REC في هذه النسخة.</p>
+        </section>
+
+        <section class="comparison-invoice-panel">
+          <div class="comparison-invoice-heading">
+            <div>
+              <h3>الفواتير المدخلة</h3>
+              <p>أضف الفواتير المراد مقارنتها.</p>
+            </div>
+            <button id="addComparisonInvoice" class="add-btn" type="button">إضافة فاتورة</button>
+          </div>
+          <div id="comparisonInvoiceRows" class="comparison-invoice-rows"></div>
+        </section>
+
+        <section class="comparison-result" aria-live="polite">
+          <h3>نتيجة المقارنة</h3>
+          <dl>
+            <div><dt>المبلغ المرجعي حسب المهندس</dt><dd id="comparisonResultReference" dir="ltr">0,00 د.م.</dd></div>
+            <div><dt>مجموع الفواتير</dt><dd id="comparisonResultInvoices" dir="ltr">0,00 د.م.</dd></div>
+            <div><dt>الفرق بين المبلغ المرجعي ومجموع الفواتير</dt><dd id="comparisonResultDifference" dir="ltr">0,00 د.م.</dd></div>
+            <div><dt>نسبة الفرق</dt><dd id="comparisonResultPercent" dir="ltr">—</dd></div>
+          </dl>
+          <p id="comparisonResultStatus" data-state="empty">اختر ملف التكلفة الحقيقية المرجعي.</p>
+          <p class="muted">لم تُحدد عتبة للتقارب؛ لذلك يُشار إلى كل فرق غير صفري بأنه يستوجب المراجعة.</p>
+        </section>
+
+        <div class="case-actions">
+          <button id="saveComparison" class="save-btn" type="button" disabled>حفظ المقارنة</button>
+          <p id="comparisonStatus" class="case-status" dir="auto" role="status" aria-live="polite"></p>
+        </div>
+      </section>
+    </section>
+
+    <section id="buttonSettingsView" class="panel button-settings-view" hidden>
+      <h2>تخصيص أزرار التطبيق</h2>
+      <p class="muted">تُحفظ هذه التفضيلات منفصلة عن ملفات GU وREC والمقارنات.</p>
+      <p id="buttonSettingsStatus" class="case-status" role="status" aria-live="polite"></p>
+      <div id="buttonSettingsList"></div>
+      <div class="button-settings-actions">
+        <button id="saveButtonSettings" class="save-btn" type="button">حفظ الإعدادات</button>
+        <button id="cancelButtonSettings" class="add-btn" type="button">إلغاء التعديلات</button>
+        <button id="restoreButtonSettings" class="delete-btn" type="button">استعادة الإعدادات الافتراضية</button>
+      </div>
+    </section>
+
+    <section id="adminPhaseView" class="panel admin-phase-view" hidden>
+      <h2>إدارة الخادم المركزي</h2>
+      <p id="adminStatus" class="case-status" role="status" aria-live="polite"></p>
+
+      <section class="admin-section">
+        <h3>Comptes et rôles</h3>
+        <form id="createUserForm" class="admin-form-grid">
+          <label>Utilisateur<input id="newUsername" type="text" minlength="3" maxlength="50" required></label>
+          <label>Mot de passe<input id="newUserPassword" type="password" minlength="12" maxlength="256" required></label>
+          <label>Rôle<select id="newUserRole"><option value="editor">Éditeur</option><option value="viewer">Lecture seule</option><option value="admin">Administrateur</option></select></label>
+          <button id="createUserButton" class="save-btn" type="submit">Créer le compte</button>
+        </form>
+        <div id="userList" class="admin-table"></div>
+      </section>
+
+      <section class="admin-section">
+        <h3>Planification et verrous</h3>
+        <form id="adminSettingsForm" class="admin-form-grid">
+          <label>Heure quotidienne des sauvegardes<input id="backupTime" type="time" required></label>
+          <label>Durée du verrou (secondes)<input id="lockLeaseSeconds" type="number" min="15" max="300" required></label>
+          <button id="saveAdminSettings" class="save-btn" type="submit">Enregistrer les réglages</button>
+        </form>
+      </section>
+
+      <section class="admin-section">
+        <h3>Stockage et sauvegardes</h3>
+        <form id="storageSettingsForm" class="admin-form-grid">
+          <label>Chemin de la base centrale<input id="databasePath" type="text" required></label>
+          <label>Dossier des sauvegardes<input id="backupDirectory" type="text" required></label>
+          <button id="saveStorageSettings" class="save-btn" type="submit">Déplacer / configurer le stockage</button>
+        </form>
+        <div class="admin-actions">
+          <button id="createBackupButton" class="add-btn" type="button">Créer une sauvegarde maintenant</button>
+          <select id="backupSelect" aria-label="Sauvegarde à restaurer"></select>
+          <button id="restoreBackupButton" class="delete-btn" type="button">Restaurer la sauvegarde sélectionnée</button>
+          <button id="refreshAdminButton" class="add-btn" type="button">Actualiser</button>
+        </div>
+        <div id="auditList" class="admin-table"></div>
+      </section>
+    </section>
+  </main>
+  </div>
+
+  <script src="client-session.js"></script>
+  <script src="client-admin.js"></script>
+  <script src="reports.js"></script>
+  <script src="button-preferences.js"></script>
+  <script src="amount-field-format.js"></script>
+  <script src="../rec/rec.js"></script>
+  <script src="previsionnel.js"></script>
+  <script src="comparison.js"></script>
+</body>
+</html>
